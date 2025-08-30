@@ -20,6 +20,7 @@ body {
 }
 
 .output {
+	word-break: break-word;
     white-space: pre;
     tab-size: 4;
 }
