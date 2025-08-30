@@ -1,13 +1,11 @@
-======
-# NAME
-======
+NAME
+====
 
 Nicholas Overacker
 
 
-=========
-# Degrees
-=========
+Degrees
+=======
 
 - M.Sc. Information and Communication Engineering
   * Kitami Institute of Technology, 2025
@@ -17,11 +15,11 @@ Nicholas Overacker
   * Oklahoma State University, 2018
 
 
-================================
-# Publications and Presentations
-================================
+Publications and Presentations
+==============================
 
-## First Author Publications
+First Author Publications
+-------------------------
 
 - N. Overacker, J. Stine, M. Ptaszynski, S. Yoshizawa, and M. Kobayashi.
 Stixu: an open-source idea for planning integrated circuit layouts efficiently.
@@ -35,7 +33,8 @@ Computing and Communication Technologies (RIVF), pages 183–187, Danang,
 Vietnam. IEEE, Dec. 2024.
 
 
-## Co-authored Publications
+Co-authored Publications
+------------------------
 
 - R. Imai, N. Overacker, K. Nowakowski, and M. Ptaszynski. アイヌ語文章の
 データ拡張による機械翻訳の性能改善に関する研究 (a study on improving
@@ -49,7 +48,8 @@ of the Thirty-first Annual Meeting of the Association for Natural Language
 Processing, Mar. 2025.
 
 
-## Oral Presentations
+Oral Presentations
+------------------
 
 - N. Overacker, M. Ptaszynski, and K. Nowakowski. Overcoming technolog-
 ical barriers to language revitalization. Presented at Decolonizing Futures
