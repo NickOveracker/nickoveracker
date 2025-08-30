@@ -9,7 +9,7 @@ const fs = [
         name: "~",
         type: DIRECTORY,
         contents: [
-            { type: TEXT, name: "cv.txt" },
+            { type: TEXT, name: "cv.md" },
             { type: EXECUTABLE, name: "stixu", handler: openStixu},
         ],
     },
