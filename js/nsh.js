@@ -36,7 +36,7 @@ const commands = [
 
 let pwd = fs[0];
 
-function openStixu() {
+function openStixu(_args) {
     window.open("https://stixu.io", "_blank").focus();
 }
 
@@ -54,7 +54,8 @@ function printOutput(outputText, setHtml=false) {
     document.body.insertBefore(outputDiv, active_prompt);
 }
 
-function ls(dir = pwd) {
+function ls(args) {
+    const dir = args.length > 1 ? args[1] : pwd;
     let output = "";
     pwd.contents.forEach(file => {
         output += `<span class="${file.type.className}">${file.name}</span>\t`;
@@ -65,7 +66,8 @@ function ls(dir = pwd) {
     printOutput(output, true);
 }
 
-function help() {
+function help(args) {
+    // TODO: Use args for specific help.
     let output = `Available commands:
     
     ls   - List files in the current directory.
@@ -89,21 +91,25 @@ function execute() {
         let cmd = commands.find(cmd => cmd.name === inputTokens[0]);
         cmd ??= pwd.contents.find(cmd => cmd.type === EXECUTABLE && cmd.name === inputTokens[0]);
         if(!!cmd) {
-            cmd.handler();
+            cmd.handler(inputTokens);
         } else {
             printOutput(`command not found: ${inputTokens[0]}`);
         }
     }
 }
 
-function cat(filePath = "./files/cv.md") {
-    let result = null;
-    const xmlhttp = new XMLHttpRequest();
-    xmlhttp.open("GET", filePath, false);
-    xmlhttp.send();
-    if (xmlhttp.status==200) {
-        result = xmlhttp.responseText;
-    }
+function cat(args) {
+
+    let result;
+
+    if(args.length > 1) {
+        let result = null;
+        const xmlhttp = new XMLHttpRequest();
+        xmlhttp.open("GET", `./files/${args[1]}`, false);
+        xmlhttp.send();
+        result = xmlhttp.status==200 ? xmlhttp.responseText : `${args[0]}: ${args[1]}: No such file or directory`
+    } else result = `USAGE: ${args[0]} filename`;
+
     printOutput(result);
 }
 
