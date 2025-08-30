@@ -96,7 +96,7 @@ function execute() {
     }
 }
 
-function cat(filePath = "./files/cv.txt") {
+function cat(filePath = "./files/cv.md") {
     let result = null;
     const xmlhttp = new XMLHttpRequest();
     xmlhttp.open("GET", filePath, false);
