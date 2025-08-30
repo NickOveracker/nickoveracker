@@ -1,7 +1,7 @@
 import { pwd } from "./fs.mjs";
 import { println } from "./stdout.mjs";
 
-export function ls(args) {
+function ls(args) {
     const dir = args.length > 1 ? args[1] : pwd;
     let output = "";
 
@@ -13,3 +13,9 @@ export function ls(args) {
 
     println(output, true);
 }
+
+export const cmd_ls = {
+    name: "ls",
+    execute: ls,
+    help: "List files in the current directory",
+};

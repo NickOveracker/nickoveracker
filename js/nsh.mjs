@@ -1,43 +1,39 @@
 // Always keep focus on the editor
 
-import { fs, pwd, EXECUTABLE } from "./modules/fs.mjs";
-import { ls } from "./modules/ls.mjs";
-import { println } from "./modules/stdout.mjs";
-import { clear } from "./modules/clear.mjs";
+import { cmd_pwd, fs, pwd, EXECUTABLE } from "./modules/fs.mjs";
+import { cmd_clear }                    from "./modules/clear.mjs";
+import { cmd_ls }                       from "./modules/ls.mjs";
+import { println }                      from "./modules/stdout.mjs";
 
 const commands = [
     {
         name: "help",
-        handler: help,
+        execute: help,
+        help: "Show this help dialogue",
     },
     {
         name: "?",
-        handler: help,
-    },
-    {
-        name: "ls",
-        handler: ls,
+        execute: help,
+        help: "Alias for \"help\"",
     },
     {
         name: "cat",
-        handler: cat,
+        execute: cat,
+        help: "Display the contents of a file"
     },
-	{
-		name: "clear",
-		handler: clear,
-	},
+    cmd_clear,
+    cmd_ls,
+    cmd_pwd,
 ];
 
 function help(args) {
     // TODO: Use args for specific help.
-    let output = `Available commands:
-    
-	clear - Clears the screen.
-    ls    - List files in the current directory.
-    cat   - Display the contents of a file.
-    help  - Show this help dialogue.
-    ?     - Alias for "help".`;
+    let output = "Available commands:\n\n";
 
+    commands.forEach(cmd => {
+        output += `${cmd.name.padEnd(8, " ")} - ${cmd.help}\n`;
+    });
+    
     println(output, false);
 }
 
@@ -45,24 +41,24 @@ function execute() {
     const inputDiv  = document.createElement("div");
     const inputText = active_prompt.innerText;
     const inputTextNode = document.createTextNode(`${inputText}`);
-	inputDiv.classList.add("prompt");
+    inputDiv.classList.add("prompt");
     inputDiv.appendChild(inputTextNode);
     active_prompt.innerText = "";
     //active_prompt.style.visibility = "hidden";
-    document.body.insertBefore(inputDiv, active_prompt);
+    document.body.insertBefore(inputDiv, active_prompt_container);
 
     const inputTokens = inputText.trim().split(/\s+/);
     if(inputTokens.length > 0) {
         let cmd = commands.find(cmd => cmd.name === inputTokens[0]);
         cmd ??= pwd.contents.find(cmd => cmd.type === EXECUTABLE && cmd.name === inputTokens[0]);
         if(!!cmd) {
-            cmd.handler(inputTokens);
+            cmd.execute(inputTokens);
         } else {
             println(`command not found: ${inputTokens[0]}`, false);
         }
     }
 
-	window.scrollTo({top: document.body.scrollHeight, behavior: "smooth"});
+    window.scrollTo({top: document.body.scrollHeight, behavior: "smooth"});
 }
 
 function cat(args) {
@@ -95,3 +91,8 @@ window.addEventListener("keydown", (e) => {
       active_prompt.focus();
     }
 });
+
+active_prompt_container.addEventListener("click", (e) => {
+    active_prompt.focus();
+});
+

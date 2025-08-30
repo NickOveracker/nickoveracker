@@ -9,5 +9,5 @@ export function println(outputText, setHtml) {
     }
 
     outputDiv.classList.add("output");
-    document.body.insertBefore(outputDiv, active_prompt);
+    document.body.insertBefore(outputDiv, active_prompt_container);
 }
