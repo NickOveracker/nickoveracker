@@ -5,6 +5,10 @@ body {
     word-break: break-all;
 }
 
+.welcome {
+	word-break: break-word;
+}
+
 .prompt::before {
     content: "> ";
 }
