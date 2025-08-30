@@ -1,48 +1,48 @@
 body {
-	font-family: 'Courier New', monospace;
-	background-color: black;
-	color: white;
-	word-break: break-all;
+    font-family: 'Courier New', monospace;
+    background-color: black;
+    color: white;
+    word-break: break-all;
 }
 
 .prompt::before {
-	content: "> ";
+    content: "> ";
 }
 
 .prompt.active::after {
-	content: "\00a0";
-	background-color: black;
-	animation: blink 2.5s ease-in-out infinite;
+    content: "\00a0";
+    background-color: black;
+    animation: blink 2.5s ease-in-out infinite;
 }
 
 .output {
-	white-space: pre;
-	tab-size: 4;
+    white-space: pre;
+    tab-size: 4;
 }
 
 .file {
-	font-weight: bold;
+    font-weight: bold;
 }
 
 .file-e {
-	color: #b83019;
+    color: #b83019;
 }
 
 .file-f {
-	color: white;
+    color: white;
 }
 
 .file-d {
-	color: #53c2c5;
+    color: #53c2c5;
 }
 
 @keyframes blink {
-	50% {
-		background-color: white;
-	}
+    50% {
+        background-color: white;
+    }
 }
 
 [contenteditable]:focus {
-	outline: 0px solid transparent;
-	caret-color: transparent;
+    outline: 0px solid transparent;
+    caret-color: transparent;
 }
