@@ -4,23 +4,13 @@ import { cmd_ls }                       from "./modules/ls.mjs";
 import { println }                      from "./modules/stdout.mjs";
 import { cmd_set, cmd_get }             from "./modules/user_vars.mjs";
 import { cmd_add }                      from "./modules/math.mjs";
+import { cmd_cat }                      from "./modules/cat.mjs";
+import { cmd_help, cmd_help_alias }     from "./modules/help.mjs";
 
-const commands = [
-    {
-        name: "help",
-        execute: help,
-        help: "Show this help dialogue",
-    },
-    {
-        name: "?",
-        execute: help,
-        help: "Alias for \"help\"",
-    },
-    {
-        name: "cat",
-        execute: cat,
-        help: "Display the contents of a file"
-    },
+export const commands = [
+    cmd_help,
+    cmd_help_alias,
+    cmd_cat,
     cmd_clear,
     cmd_ls,
     cmd_pwd,
@@ -28,17 +18,6 @@ const commands = [
     cmd_get,
     cmd_add,
 ];
-
-function help(args) {
-    // TODO: Use args for specific help.
-    let output = "Available commands:\n\n";
-
-    commands.forEach(cmd => {
-        output += `${cmd.name.padEnd(8, " ")} - ${cmd.help}\n`;
-    });
-    
-    println(output, false);
-}
 
 function execute() {
     const inputDiv  = document.createElement("div");
@@ -62,20 +41,6 @@ function execute() {
     }
 
     window.scrollTo({top: document.body.scrollHeight, behavior: "smooth"});
-}
-
-function cat(args) {
-
-    let result = null;
-
-    if(args.length > 1) {
-        const xmlhttp = new XMLHttpRequest();
-        xmlhttp.open("GET", `./files/${args[1]}`, false);
-        xmlhttp.send();
-        result = xmlhttp.status==200 ? xmlhttp.responseText : `${args[0]}: ${args[1]}: No such file or directory`
-    } else result = `USAGE: ${args[0]} filename`;
-
-    println(result, false);
 }
 
 // Courtesy of epascarello: https://stackoverflow.com/a/58980415/2535523
