@@ -9,10 +9,31 @@ function isNumeric(n) {
 
 function add(args) {
     const inputs = args.slice(1);
-    if(inputs.every(arg => isNumeric(arg))) {
-        return inputs.reduce((sum, str) => { return parseFloat(str) + sum; }, 0);
+    let sum = 0;
+
+    function _add(arg) {
+        sum += parseFloat(arg);
     }
-    return NaN;
+
+    inputs.some(arg => {
+        let badInput = false;
+
+        if(isNumeric(arg)) {
+            _add(arg);
+        } else {
+            let getArg = get([this, arg]);
+            if(isNumeric(getArg)) {
+                _add(getArg);
+            } else {
+                sum = NaN;
+                badInput = true;
+            }
+        }
+
+        return badInput;
+    });
+
+    return sum;
 }
 
 export const cmd_add = {
