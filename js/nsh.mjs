@@ -1,19 +1,8 @@
 // Always keep focus on the editor
 
-const DIRECTORY  = { className: "file file-d", },
-      TEXT       = { className: "file file-f", },
-      EXECUTABLE = { className: "file file-e", };
-
-const fs = [ 
-    {
-        name: "~",
-        type: DIRECTORY,
-        contents: [
-            { type: TEXT, name: "cv.md" },
-            { type: EXECUTABLE, name: "stixu", handler: openStixu},
-        ],
-    },
-];
+import { fs, pwd, EXECUTABLE } from "./modules/fs.mjs";
+import { ls } from "./modules/ls.mjs";
+import { println } from "./modules/stdout.mjs";
 
 const commands = [
     {
@@ -34,54 +23,23 @@ const commands = [
     },
 ];
 
-let pwd = fs[0];
-
-function openStixu(_args) {
-    window.open("https://stixu.io", "_blank").focus();
-}
-
-function printOutput(outputText, setHtml=false) {
-    const outputDiv  = document.createElement("div");
-
-    if(setHtml) {
-        outputDiv.innerHTML = outputText;
-    } else {
-        const outputTextNode = document.createTextNode(outputText);
-        outputDiv.appendChild(outputTextNode);
-    }
-
-    outputDiv.classList.add("output");
-    document.body.insertBefore(outputDiv, active_prompt);
-}
-
-function ls(args) {
-    const dir = args.length > 1 ? args[1] : pwd;
-    let output = "";
-    pwd.contents.forEach(file => {
-        output += `<span class="${file.type.className}">${file.name}</span>\t`;
-    });
-
-    output = output.substring(0, output.length-1);
-
-    printOutput(output, true);
-}
-
 function help(args) {
     // TODO: Use args for specific help.
     let output = `Available commands:
     
     ls   - List files in the current directory.
-	cat  - Display the contents of a file.
+    cat  - Display the contents of a file.
     help - Show this help dialogue.
     ?    - Alias for "help".`;
 
-    printOutput(output);
+    println(output, false);
 }
 
 function execute() {
     const inputDiv  = document.createElement("div");
     const inputText = active_prompt.innerText;
-    const inputTextNode = document.createTextNode(`> ${inputText}`);
+    const inputTextNode = document.createTextNode(`${inputText}`);
+	inputDiv.classList.add("prompt");
     inputDiv.appendChild(inputTextNode);
     active_prompt.innerText = "";
     //active_prompt.style.visibility = "hidden";
@@ -94,9 +52,11 @@ function execute() {
         if(!!cmd) {
             cmd.handler(inputTokens);
         } else {
-            printOutput(`command not found: ${inputTokens[0]}`);
+            println(`command not found: ${inputTokens[0]}`, false);
         }
     }
+
+	window.scrollTo({top: document.body.scrollHeight, behavior: "smooth"});
 }
 
 function cat(args) {
@@ -110,7 +70,7 @@ function cat(args) {
         result = xmlhttp.status==200 ? xmlhttp.responseText : `${args[0]}: ${args[1]}: No such file or directory`
     } else result = `USAGE: ${args[0]} filename`;
 
-    printOutput(result);
+    println(result, false);
 }
 
 // Courtesy of epascarello: https://stackoverflow.com/a/58980415/2535523
