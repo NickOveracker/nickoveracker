@@ -3,34 +3,40 @@
 import { fs, pwd, EXECUTABLE } from "./modules/fs.mjs";
 import { ls } from "./modules/ls.mjs";
 import { println } from "./modules/stdout.mjs";
+import { clear } from "./modules/clear.mjs";
 
 const commands = [
     {
-        name: "ls",
-        handler: ls,
+        name: "help",
+        handler: help,
     },
     {
         name: "?",
         handler: help,
     },
     {
-        name: "help",
-        handler: help,
+        name: "ls",
+        handler: ls,
     },
     {
         name: "cat",
         handler: cat,
     },
+	{
+		name: "clear",
+		handler: clear,
+	},
 ];
 
 function help(args) {
     // TODO: Use args for specific help.
     let output = `Available commands:
     
-    ls   - List files in the current directory.
-    cat  - Display the contents of a file.
-    help - Show this help dialogue.
-    ?    - Alias for "help".`;
+	clear - Clears the screen.
+    ls    - List files in the current directory.
+    cat   - Display the contents of a file.
+    help  - Show this help dialogue.
+    ?     - Alias for "help".`;
 
     println(output, false);
 }
