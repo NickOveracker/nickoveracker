@@ -31,7 +31,7 @@ const commands = [
     {
         name: "cat",
         handler: cat,
-    }
+    },
 ];
 
 let pwd = fs[0];
@@ -71,6 +71,7 @@ function help(args) {
     let output = `Available commands:
     
     ls   - List files in the current directory.
+	cat  - Display the contents of a file.
     help - Show this help dialogue.
     ?    - Alias for "help".`;
 
