@@ -100,10 +100,9 @@ function execute() {
 
 function cat(args) {
 
-    let result;
+    let result = null;
 
     if(args.length > 1) {
-        let result = null;
         const xmlhttp = new XMLHttpRequest();
         xmlhttp.open("GET", `./files/${args[1]}`, false);
         xmlhttp.send();
