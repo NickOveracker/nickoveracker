@@ -84,13 +84,15 @@ function execute() {
     //active_prompt.style.visibility = "hidden";
     document.body.insertBefore(inputDiv, active_prompt);
 
-    const trimmedInput = inputText.trim();
-    let cmd = commands.find(cmd => cmd.name === trimmedInput);
-    cmd ??= pwd.contents.find(cmd => cmd.type === EXECUTABLE && cmd.name === trimmedInput);
-    if(!!cmd) {
-        cmd.handler();
-    } else {
-        printOutput(`command not found: ${trimmedInput}`);
+    const inputTokens = inputText.trim().split(/\s+/);
+    if(inputTokens.length > 0) {
+        let cmd = commands.find(cmd => cmd.name === inputTokens[0]);
+        cmd ??= pwd.contents.find(cmd => cmd.type === EXECUTABLE && cmd.name === inputTokens[0]);
+        if(!!cmd) {
+            cmd.handler();
+        } else {
+            printOutput(`command not found: ${inputTokens[0]}`);
+        }
     }
 }
 
@@ -104,6 +106,13 @@ function cat(filePath = "./files/cv.txt") {
     }
     printOutput(result);
 }
+
+// Courtesy of epascarello: https://stackoverflow.com/a/58980415/2535523
+active_prompt.addEventListener('paste', function (e) {
+    e.preventDefault()
+    const text = e.clipboardData.getData('text/plain');
+    document.execCommand('insertText', false, text);
+})
 
 window.addEventListener("keydown", (e) => {
     if (e.key === "Enter") {
