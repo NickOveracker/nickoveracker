@@ -1,9 +1,9 @@
-// Always keep focus on the editor
-
 import { cmd_pwd, fs, pwd, EXECUTABLE } from "./modules/fs.mjs";
 import { cmd_clear }                    from "./modules/clear.mjs";
 import { cmd_ls }                       from "./modules/ls.mjs";
 import { println }                      from "./modules/stdout.mjs";
+import { cmd_set, cmd_get }             from "./modules/user_vars.mjs";
+import { cmd_add }                      from "./modules/math.mjs";
 
 const commands = [
     {
@@ -24,6 +24,9 @@ const commands = [
     cmd_clear,
     cmd_ls,
     cmd_pwd,
+    cmd_set,
+    cmd_get,
+    cmd_add,
 ];
 
 function help(args) {
