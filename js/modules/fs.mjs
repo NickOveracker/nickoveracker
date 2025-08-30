@@ -15,16 +15,21 @@ export const fs = [
     },
 ];
 
-export let pwd = fs[0];
-
-// END OF EXPORTS
-
-function openStixu(_args) {
-    window.open("https://stixu.io", "_blank").focus();
-}
-
 export const cmd_pwd = {
     name: "pwd",
     execute: args => { println(pwd.name) },
     help: "Display the current path",
 };
+
+export const getFile = function(path) {
+    // TODO: Don't use pwd.
+    return pwd.contents.find(file => file.name === path);
+};
+
+export let pwd = fs[0];
+
+function openStixu(_args) {
+    window.open("https://stixu.io", "_blank").focus();
+}
+
+
