@@ -77,3 +77,5 @@ export const cmd_set = {
     execute: set,
     showHelp: true,
 };
+
+export const vars_cmds = [ cmd_get, cmd_set ];

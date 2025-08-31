@@ -31,3 +31,5 @@ export const cmd_cat = {
     help: "Display the contents of a file",
     showHelp: true,
 };
+
+export const cat_cmds = [ cmd_cat ];

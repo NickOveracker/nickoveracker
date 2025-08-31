@@ -1,24 +1,22 @@
-import { cmd_pwd, fs, pwd, EXECUTABLE } from "./modules/fs.mjs";
-import { cmd_clear }                    from "./modules/clear.mjs";
-import { cmd_ls, cmd_dir }              from "./modules/ls.mjs";
+import { fs_cmds, fs, pwd, EXECUTABLE } from "./modules/fs.mjs";
+import { clear_cmds }                   from "./modules/clear.mjs";
+import { vars_cmds  }                   from "./modules/user_vars.mjs";
+import { math_cmds  }                   from "./modules/math.mjs";
+import { cat_cmds   }                   from "./modules/cat.mjs";
+import { help_cmds  }                   from "./modules/help.mjs";
 import { println }                      from "./modules/stdout.mjs";
-import { cmd_set, cmd_get }             from "./modules/user_vars.mjs";
-import { cmd_add }                      from "./modules/math.mjs";
-import { cmd_cat }                      from "./modules/cat.mjs";
-import { cmd_help, cmd_help_alias }     from "./modules/help.mjs";
+//import { cmd_latn }                     from "./modules/nlp.mjs";
 
 export const commands = [
-    cmd_help,
-    cmd_help_alias,
-    cmd_cat,
-    cmd_clear,
-    cmd_ls,
-    cmd_dir,
-    cmd_pwd,
-    cmd_set,
-    cmd_get,
-    cmd_add,
+    ...help_cmds,
+    ...cat_cmds,
+    ...clear_cmds,
+    ...fs_cmds,
+    ...vars_cmds,
+    ...math_cmds,
+    //cmd_latn,
 ];
+
 
 function execute() {
     const inputDiv  = document.createElement("div");

@@ -20,9 +20,12 @@ export const cmd_help = {
     help: "Show this help dialogue",
     showHelp: true,
 };
+
 export const cmd_help_alias = {
     name: "?",
     execute: help,
     help: "Alias for \"help\"",
     showHelp: true,
 };
+
+export const help_cmds = [ cmd_help, cmd_help_alias ];

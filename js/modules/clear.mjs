@@ -9,3 +9,5 @@ export const cmd_clear = {
     help: "Clear the screen",
     showHelp: true,
 };
+
+export const clear_cmds = [ cmd_clear ];

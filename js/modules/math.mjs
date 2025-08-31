@@ -32,7 +32,9 @@ function add(params) {
 
 export const cmd_add = {
     name: "add",
-    help: "Add numbers",
+    help: "Add 2 numbers",
     execute: params => { (params.ostream || stdout).println(add(params)) },
     showHelp: true,
 };
+
+export const math_cmds = [ cmd_add ];
