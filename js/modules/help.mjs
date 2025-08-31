@@ -7,7 +7,7 @@ function help(params) {
 
     commands.forEach(cmd => {
         if(cmd.showHelp) {
-            output += `${cmd.name.padEnd(8, " ")} - ${cmd.help}\n`;
+            output += `${cmd.name.padEnd(5, " ")} - ${cmd.help}\n`;
         }
     });
     
