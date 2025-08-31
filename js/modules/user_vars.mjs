@@ -28,6 +28,7 @@ export const get = function(params) {
     return NULL;
 }
 
+// TODO: This function is atrocious. Clean it up.
 export const set = function(params) {
     const inputs = params.args;
     const ostream = params.ostream || stdout;
@@ -49,12 +50,15 @@ export const set = function(params) {
                 vars[inputs[1]] = buffer.data[0] || "";
             } else {
                 ostream.println(`${inputs[0]}: ERROR: Invalid input.`);
+                return; // Seriously? Returning here? Needs serious refactoring.
             }
         }
 
     } else if(inputs.length > 1) {
         vars[inputs[1]] = "";
     }
+
+    ostream.println(vars[inputs[1]]);
 }
 
 export const cmd_get = {
