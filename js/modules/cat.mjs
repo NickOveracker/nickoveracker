@@ -28,5 +28,6 @@ function cat(params) {
 export const cmd_cat = {
     name: "cat",
     execute: cat,
-    help: "Display the contents of a file"
+    help: "Display the contents of a file",
+    showHelp: true,
 };

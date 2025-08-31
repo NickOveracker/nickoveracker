@@ -34,4 +34,5 @@ export const cmd_add = {
     name: "add",
     help: "Add numbers",
     execute: params => { (params.ostream || stdout).println(add(params)) },
+    showHelp: true,
 };

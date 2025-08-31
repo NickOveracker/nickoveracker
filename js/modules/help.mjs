@@ -6,7 +6,9 @@ function help(params) {
     let output = "Available commands:\n\n";
 
     commands.forEach(cmd => {
-        output += `${cmd.name.padEnd(8, " ")} - ${cmd.help}\n`;
+        if(cmd.showHelp) {
+            output += `${cmd.name.padEnd(8, " ")} - ${cmd.help}\n`;
+        }
     });
     
     (params.ostream || stdout).println(output, false);
@@ -16,9 +18,11 @@ export const cmd_help = {
     name: "help",
     execute: help,
     help: "Show this help dialogue",
+    showHelp: true,
 };
 export const cmd_help_alias = {
     name: "?",
     execute: help,
     help: "Alias for \"help\"",
+    showHelp: true,
 };

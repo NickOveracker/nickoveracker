@@ -7,4 +7,5 @@ export const cmd_clear = {
     name: "clear",
     execute: clear,
     help: "Clear the screen",
+    showHelp: true,
 };

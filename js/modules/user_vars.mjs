@@ -59,10 +59,12 @@ export const cmd_get = {
         const res = get(params);
         (params.ostream || stdout).println(res === NULL ? "" : res);
     },
+    showHelp: true,
 };
 
 export const cmd_set = {
     name: "set",
     help: "Set the value of a variable",
     execute: set,
+    showHelp: true,
 };
