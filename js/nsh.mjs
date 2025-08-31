@@ -30,6 +30,7 @@ function execute() {
 
     const inputTokens = inputText.trim().split(/\s+/);
     if(inputTokens.length > 0) {
+        // TODO: This needs to be in its own function. Need to evaluate expressions right to left.
         let cmd = commands.find(cmd => cmd.name === inputTokens[0]);
         cmd ??= pwd.contents.find(cmd => cmd.type === EXECUTABLE && cmd.name === inputTokens[0]);
         if(!!cmd) {
