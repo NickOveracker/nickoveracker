@@ -1,14 +1,8 @@
-import { println } from "./stdout.mjs";
-import { get, set } from "./user_vars.mjs";
+import { stdout } from "./stdout.mjs";
+import { get, set, isNumeric } from "./user_vars.mjs";
 
-// Courtesy of Sudhir Bastakoti and Robert Harvey:
-// https://stackoverflow.com/a/9716488/2535523
-function isNumeric(n) {
-  return !isNaN(parseFloat(n)) && isFinite(n);
-}
-
-function add(args) {
-    const inputs = args.slice(1);
+function add(params) {
+    const inputs = params.args.slice(1);
     let sum = 0;
 
     function _add(arg) {
@@ -21,7 +15,7 @@ function add(args) {
         if(isNumeric(arg)) {
             _add(arg);
         } else {
-            let getArg = get([this, arg]);
+            let getArg = get({args: [this, arg]});
             if(isNumeric(getArg)) {
                 _add(getArg);
             } else {
@@ -39,5 +33,5 @@ function add(args) {
 export const cmd_add = {
     name: "add",
     help: "Add numbers",
-    execute: args => { println(add(args)); },
+    execute: params => { (params.ostream || stdout).println(add(params)) },
 };

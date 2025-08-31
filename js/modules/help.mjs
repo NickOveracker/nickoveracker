@@ -1,15 +1,15 @@
 import { commands } from "../nsh.mjs";
-import { println } from "./stdout.mjs";
+import { stdout } from "./stdout.mjs";
 
-function help(args) {
-    // TODO: Use args for specific help.
+function help(params) {
+    // TODO: Use params for specific help.
     let output = "Available commands:\n\n";
 
     commands.forEach(cmd => {
         output += `${cmd.name.padEnd(8, " ")} - ${cmd.help}\n`;
     });
     
-    println(output, false);
+    (params.ostream || stdout).println(output, false);
 }
 
 export const cmd_help = {

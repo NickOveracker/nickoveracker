@@ -1,4 +1,4 @@
-import { println } from "./stdout.mjs";
+import { stdout } from "./stdout.mjs";
 
 export const DIRECTORY  = { className: "file file-d", },
              TEXT       = { className: "file file-f", },
@@ -17,7 +17,7 @@ export const fs = [
 
 export const cmd_pwd = {
     name: "pwd",
-    execute: args => { println(pwd.name) },
+    execute: args => { (args.ostream || stdout).println(pwd.name); },
     help: "Display the current path",
 };
 
@@ -31,5 +31,3 @@ export let pwd = fs[0];
 function openStixu(_args) {
     window.open("https://stixu.io", "_blank").focus();
 }
-
-

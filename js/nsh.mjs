@@ -34,7 +34,7 @@ function execute() {
         let cmd = commands.find(cmd => cmd.name === inputTokens[0]);
         cmd ??= pwd.contents.find(cmd => cmd.type === EXECUTABLE && cmd.name === inputTokens[0]);
         if(!!cmd) {
-            cmd.execute(inputTokens);
+            cmd.execute({args: inputTokens});
         } else {
             println(`command not found: ${inputTokens[0]}`, false);
         }

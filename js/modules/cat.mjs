@@ -1,29 +1,28 @@
 import { EXECUTABLE, DIRECTORY, getFile } from "./fs.mjs";
-import { println } from "./stdout.mjs";
+import { stdout } from "./stdout.mjs";
 
-function cat(args) {
-
-    const file = getFile(args[1]);
-    let result = null;
+function cat(params) {
+    const file   = getFile(params.args[1]);
+    let   result = "";
 
     if(!!file) {
         if(file.type === EXECUTABLE) {
-            result = `${args[0]}: ${args[1]}: Executable file.`;
+            result = `${params.args[0]}: ${params.args[1]}: Executable file.`;
         } else if(file.type === DIRECTORY) {
-            result = `${args[0]}: ${args[1]}: Directory.`;
+            result = `${params.args[0]}: ${params.args[1]}: Directory.`;
         } else {
             const xmlhttp = new XMLHttpRequest();
-            xmlhttp.open("GET", `./files/${args[1]}`, false);
+            xmlhttp.open("GET", `./files/${params.args[1]}`, false);
             xmlhttp.send();
             result = xmlhttp.status==200 ? xmlhttp.responseText : `ERROR: Internet's broken :(`;
         }
-    } else if(args.length > 1) {
-            result = `${args[0]}: ${args[1]}: No such file or directory`;
+    } else if(params.args.length > 1) {
+            result = `${params.args[0]}: ${params.args[1]}: No such file or directory`;
     } else {
-        result = `USAGE: ${args[0]} filename`;
+        result = `USAGE: ${params.args[0]} filename`;
     }
 
-    println(result, false);
+    (params.ostream || stdout).println(result, false);
 }
 
 export const cmd_cat = {

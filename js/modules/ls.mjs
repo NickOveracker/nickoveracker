@@ -1,8 +1,8 @@
 import { pwd } from "./fs.mjs";
-import { println } from "./stdout.mjs";
+import { stdout } from "./stdout.mjs";
 
-function ls(args) {
-    const dir = args.length > 1 ? args[1] : pwd;
+function ls(params) {
+    const dir = params.args.length > 1 ? params.args[1] : pwd;
     let output = "";
 
     dir.contents.forEach(file => {
@@ -11,7 +11,7 @@ function ls(args) {
 
     output = output.substring(0, output.length-1);
 
-    println(output, true);
+    (params.ostream || stdout).println(output, true);
 }
 
 export const cmd_ls = {

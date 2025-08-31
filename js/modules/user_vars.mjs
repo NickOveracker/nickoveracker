@@ -1,32 +1,63 @@
-import { println } from "./stdout.mjs";
+import { commands } from "../nsh.mjs";
+import { stdout } from "./stdout.mjs";
 
 export const NULL = {};
 
 let vars = {
 }
 
-export const get = function(args) {
-    if(args.length > 1 && vars[args[1]] !== undefined) {
-        return vars[args[1]];
+// Courtesy of Sudhir Bastakoti and Robert Harvey:
+// https://stackoverflow.com/a/9716488/2535523
+export const isNumeric = function(n) {
+  return !isNaN(parseFloat(n)) && isFinite(n);
+}
+
+const isInQuotes = function(str) {
+    const result = str.startsWith('"') && str.endsWith('"');
+    // Using the ASCII code \x22 below to keep Vim syntax highlighting happy.
+    return result && (str.match(/\x22/g) || []).length === 2;
+}
+
+export const get = function(params) {
+    const inputs = params.args;
+
+    if(inputs.length > 1 && inputs[1] !== undefined) {
+        return vars[inputs[1]];
     }
 
     return NULL;
 }
 
-export const set = function(args) {
-    if(args.length > 2) {
-        vars[args[1]] = args[2];
-    } else if(args.length > 1) {
-        vars[args[1]] = "";
+export const set = function(params) {
+    const inputs = params.args;
+    const ostream = params.ostream || stdout;
+
+    if(inputs.length > 2) {
+        if(isInQuotes(inputs[2])) {
+            vars[inputs[1]] = inputs[2].substring(1, inputs[2].length - 1);
+        } else if(isNumeric(inputs[2])) {
+            vars[inputs[1]] = inputs[2];
+        /*} else {
+            const command = commands.find(cmd => cmd.name === inputs[2]);
+
+            if(!!command) {
+                command.execute(inputs.splice(2));
+            }*/
+        } else {
+            ostream.println(`${inputs[0]}: ERROR: Invalid input.`);
+        }
+
+    } else if(inputs.length > 1) {
+        vars[inputs[1]] = "";
     }
 }
 
 export const cmd_get = {
     name: "get",
     help: "Get the value of a variable",
-    execute: args => {
-        const res = get(args);
-        println(res === NULL ? "" : res);
+    execute: params => {
+        const res = get(params);
+        (params.ostream || stdout).println(res === NULL ? "" : res);
     },
 };
 
