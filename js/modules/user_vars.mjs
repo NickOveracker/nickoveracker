@@ -37,14 +37,19 @@ export const set = function(params) {
             vars[inputs[1]] = inputs[2].substring(1, inputs[2].length - 1);
         } else if(isNumeric(inputs[2])) {
             vars[inputs[1]] = inputs[2];
-        /*} else {
+        } else {
             const command = commands.find(cmd => cmd.name === inputs[2]);
 
             if(!!command) {
-                command.execute(inputs.splice(2));
-            }*/
-        } else {
-            ostream.println(`${inputs[0]}: ERROR: Invalid input.`);
+                const buffer = {
+                    data: [],
+                    println: function(str) { this.data.push(str); },
+                };
+                command.execute({args: inputs.splice(2), ostream: buffer});
+                vars[inputs[1]] = buffer.data[0] || "";
+            } else {
+                ostream.println(`${inputs[0]}: ERROR: Invalid input.`);
+            }
         }
 
     } else if(inputs.length > 1) {
