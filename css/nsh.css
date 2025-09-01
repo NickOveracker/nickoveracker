@@ -27,13 +27,14 @@ body {
     background-color: black;
     animation: blink 2.5s ease-in-out infinite;
 }
-
+*/
 @keyframes blink {
     50% {
-        background-color: white;
+        background-color: transparent;
+        color: white;
     }
 }
-*/
+/**/
 
 .output {
     word-break: break-word;
@@ -75,4 +76,5 @@ body {
 .shadow .caret {
     background: white;
     color: black;
+    animation: blink 2.5s ease-in-out infinite;
 }
