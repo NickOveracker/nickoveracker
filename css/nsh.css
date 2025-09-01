@@ -9,21 +9,31 @@ body {
     word-break: break-word;
 }
 
-.prompt::before {
-    color: green;
+.prompt::before, .shadow::before {
+    color: lime;
     content: "> ";
+    font-weight: bolder;
 }
 
 .active-prompt-container {
     width: 100%;
     display: inline-block;
+    position: relative;
 }
 
+/*
 .prompt.active::after {
     content: "\00a0";
     background-color: black;
     animation: blink 2.5s ease-in-out infinite;
 }
+
+@keyframes blink {
+    50% {
+        background-color: white;
+    }
+}
+*/
 
 .output {
     word-break: break-word;
@@ -47,13 +57,22 @@ body {
     color: #53c2c5;
 }
 
-@keyframes blink {
-    50% {
-        background-color: white;
-    }
+.active, .shadow {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.shadow {
+    color: transparent;
 }
 
 [contenteditable]:focus {
     outline: 0px solid transparent;
     caret-color: transparent;
+}
+
+.shadow .caret {
+    background: white;
+    color: black;
 }
