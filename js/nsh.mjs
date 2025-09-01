@@ -1,12 +1,12 @@
-import { fs_cmds, fs, pwd, EXECUTABLE } from "./modules/fs.mjs";
-import { clear_cmds }                   from "./modules/clear.mjs";
-import { vars_cmds  }                   from "./modules/user_vars.mjs";
-import { math_cmds  }                   from "./modules/math.mjs";
-import { cat_cmds, cmd_cat as cat }     from "./modules/cat.mjs";
-import { help_cmds  }                   from "./modules/help.mjs";
-import { nav_cmds }                     from "./modules/nav.mjs";
-import { stdout }                       from "./modules/stdout.mjs";
-//import { cmd_latn }                     from "./modules/nlp.mjs";
+import { fs_cmds, pwd, EXECUTABLE, getFile } from "./modules/fs.mjs";
+import { clear_cmds }                        from "./modules/clear.mjs";
+import { vars_cmds  }                        from "./modules/user_vars.mjs";
+import { math_cmds  }                        from "./modules/math.mjs";
+import { cat_cmds, cmd_cat as cat }          from "./modules/cat.mjs";
+import { help_cmds  }                        from "./modules/help.mjs";
+import { nav_cmds }                          from "./modules/nav.mjs";
+import { stdout }                            from "./modules/stdout.mjs";
+//import { cmd_latn }                          from "./modules/nlp.mjs";
 
 export const commands = [
     ...help_cmds,
@@ -24,14 +24,12 @@ const nostream = {
 }
 
 function resolveCommand(inputs, ctx) {
-    let executable = ctx.contents.find(cmd => {
-        return cmd.type === EXECUTABLE && cmd.name === inputs[0];
-    });
+    let file = getFile(inputs[0], ctx);
 
-    if(!!executable) {
+    if(!!file && file.type === EXECUTABLE) {
         let buffer = "";
         cat.execute({
-            args: [ null, `${ctx.path}/${inputs[0]}`],
+            args: [ null, file.path],
             ostream: {
                 println: function(str) {
                     buffer += str;

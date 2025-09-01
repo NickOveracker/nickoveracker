@@ -13,6 +13,7 @@ const hash = {
         contents: [],
     },
 };
+hash["~"].parentD = hash["~"];
 
 export const fs = (() => {
     files.forEach(file => {
@@ -49,7 +50,6 @@ export const fs = (() => {
 
 export const getFile = function(path, ctx) {
     if(path.startsWith("../")) {
-        const newCtx = !!ctx.parentD ? ctx.parentD : ctx;
         return getFile(path.substring(3), ctx.parentD);
     } else if(path.startsWith("./")) {
         return getFile(path.substring(2), ctx);
