@@ -74,7 +74,7 @@ body {
 }
 
 .shadow .caret {
-    background: white;
+    background: cornflowerblue;
     color: black;
     animation: blink 2.5s ease-in-out infinite;
 }
