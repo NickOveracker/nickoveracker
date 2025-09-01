@@ -1,6 +1,4 @@
 export const files = [
-    "research/.DS_Store",
-    "research/nlp/.DS_Store",
     "research/nlp/2024-rivf/rivf-2024.pptx",
     "research/nlp/2024-rivf/rivf-2024.pdf",
     "research/vlsi/2025-tencon/tencon2024.pptx",
@@ -8,7 +6,6 @@ export const files = [
     "research/vlsi/2025-async/async2025.pdf",
     "research/vlsi/2025-async/async2025.pptx",
     "cv.md",
-    ".DS_Store",
     "stixu.nsh",
     "test.nsh",
     "latinizer.nsh",
