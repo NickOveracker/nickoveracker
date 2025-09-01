@@ -25,15 +25,15 @@ export const fs = (() => {
             const thisPath = `${parentPath}/${name}`;
             let thisFileObj = hash[thisPath];
 
-            if(!thisFileObj) {
+            if (!thisFileObj) {
                 thisFileObj = { name: name, path: thisPath, parentD: parentObj };
                 hash[thisPath] = thisFileObj
                 parentObj.contents.push(thisFileObj);
 
-                if(depth < hierarchy.length - 1) { // TODO: Handle empty directories.
+                if (depth < hierarchy.length - 1) { // TODO: Handle empty directories.
                     thisFileObj.type = DIRECTORY;
                     thisFileObj.contents = [];
-                } else if(name.endsWith(".nsh")) {
+                } else if (name.endsWith(".nsh")) {
                     thisFileObj.type = EXECUTABLE;
                 } else {
                     thisFileObj.type = TEXT; // TODO: Obviously these aren't all text.
@@ -48,15 +48,30 @@ export const fs = (() => {
     return [ hash["~"], ];
 })();
 
-export const getFile = function(path, ctx) {
-    if(path.startsWith("../")) {
+export const getFile = function (path, ctx) {
+    let oldPath;
+    do {
+        oldPath = path; 
+        path = path.replaceAll(/\/\/+/g, "/");      // /blah//  -> /blah/
+        path = path.replaceAll(/\/\.\//g, "/");     // /blah/./ -> /blah/
+        path = path.replace(/\/\.$/, "");           // /blah/$  -> /blah
+        path = path.replace(/[^\/\.]+\/\.\./, "/"); // /blah/.. -> /
+        //path = path.replace(/^\/\/\.\./, "/");      // ^/..     -> /
+    } while (path !== oldPath);
+
+    if (path.startsWith("../")) {
         return getFile(path.substring(3), ctx.parentD);
-    } else if(path.startsWith("./")) {
+    } else if (path.startsWith("./")) {
         return getFile(path.substring(2), ctx);
-    } else if(path.startsWith("/")) {
+    } else if (path.startsWith("/")) {
         return getFile(`~${path}`, hash["~"]);
+    } else if (path === "..") {
+        return ctx.parentD;
+    } else if (path === ".") {
+        return ctx;
     }
-    return hash[ path.startsWith("~") ? path : `${ctx.path}/${path}`];
+
+    return hash[ (path.startsWith("~") ? path : `${ctx.path}/${path}`).replace(/\/$/, "")];
 };
 
 /**************
@@ -74,15 +89,23 @@ export let pwd = fs[0];
  * LS COMMAND
  *************/
 function ls(params) {
-    const dir = params.args.length > 1 ? params.args[1] : pwd;
+    function stylize(file) {
+        return `<span class="${file.type.className}">${file.name}</span>\t`;
+    }
+
+    const target = params.args.length > 1 ? getFile(params.args[1], pwd) : pwd;
     let output = "";
 
-    dir.contents.forEach(file => {
-        output += `<span class="${file.type.className}">${file.name}</span>\t`;
-    });
+    if (target.type === DIRECTORY) {
+        target.contents.forEach(file => {
+            output += stylize(file);
+        });
+
+    } else {
+        output = stylize(target);
+    }
 
     output = output.substring(0, output.length-1);
-
     (params.ostream || stdout).println(output, true);
 }
 
