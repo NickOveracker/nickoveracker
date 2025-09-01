@@ -5,7 +5,7 @@ import { math_cmds  }                   from "./modules/math.mjs";
 import { cat_cmds, cmd_cat as cat }     from "./modules/cat.mjs";
 import { help_cmds  }                   from "./modules/help.mjs";
 import { nav_cmds }                     from "./modules/nav.mjs";
-import { println }                      from "./modules/stdout.mjs";
+import { stdout }                       from "./modules/stdout.mjs";
 //import { cmd_latn }                     from "./modules/nlp.mjs";
 
 export const commands = [
@@ -18,6 +18,10 @@ export const commands = [
     ...nav_cmds,
     //cmd_latn,
 ];
+
+const nostream = {
+    println: (_) => {},
+}
 
 function resolveCommand(inputs, ctx) {
     let executable = ctx.contents.find(cmd => {
@@ -35,10 +39,16 @@ function resolveCommand(inputs, ctx) {
             },
         });
 
-        return resolveCommand(buffer.trim().split(/\s+/), ctx);
+        const lines = buffer.trim().split(/[\r\n]+/);
+        let cmds = [];
+        lines.forEach(line => {
+            // TODO: ctx can be changed by the script.
+            cmds = cmds.concat(resolveCommand(line.trim().split(/\s+/), ctx))
+        });
+        return cmds;
     } else {
         let builtinCmd = commands.find(cmd => cmd.name === inputs[0]);
-        return !!builtinCmd ? { execute: builtinCmd.execute, args: inputs } : null;
+        return !!builtinCmd ? [ { execute: builtinCmd.execute, args: inputs } ] : [ null ];
     }
 }
 
@@ -53,15 +63,25 @@ function execute() {
     document.body.insertBefore(inputDiv, active_prompt_container);
 
     const inputTokens = inputText.trim().split(/\s+/);
-    if(inputTokens.length > 0) {
-        // TODO: This needs to be in its own function. Need to evaluate expressions right to left.
-        const cmd = resolveCommand(inputTokens, pwd);
 
-        if(!!cmd) {
-            cmd.execute({args: cmd.args});
-        } else {
-            println(`command not found: ${inputTokens[0]}`, false);
-        }
+    if(inputTokens.length > 0) {
+        const cmds = resolveCommand(inputTokens, pwd);
+
+        cmds.every((cmd, idx) => {
+            let ok = true;
+
+            if(!!cmd) {
+                cmd.execute({
+                    args: cmd.args,
+                    ostream: idx == cmds.length - 1 ? stdout : nostream,
+                });
+            } else {
+                stdout.println(`command not found: ${inputTokens[0]}`, false);
+                ok = false;
+            }
+
+            return ok;
+        });
     }
 
     window.scrollTo({top: document.body.scrollHeight, behavior: "smooth"});
