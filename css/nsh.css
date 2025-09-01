@@ -21,20 +21,12 @@ body {
     position: relative;
 }
 
-/*
-.prompt.active::after {
-    content: "\00a0";
-    background-color: black;
-    animation: blink 2.5s ease-in-out infinite;
-}
-*/
 @keyframes blink {
     50% {
         background-color: transparent;
         color: white;
     }
 }
-/**/
 
 .output {
     word-break: break-word;
@@ -58,19 +50,15 @@ body {
     color: #53c2c5;
 }
 
-.active, .shadow {
-    position: absolute;
-    top: 0;
-    left: 0;
-}
-
-.shadow {
-    color: transparent;
-}
-
 [contenteditable]:focus {
     outline: 0px solid transparent;
     caret-color: transparent;
+}
+
+.shadow {
+    position: absolute;
+    left: 0;
+    color: transparent;
 }
 
 .shadow .caret {

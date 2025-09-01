@@ -61,6 +61,7 @@ function execute() {
     inputDiv.classList.add("prompt");
     inputDiv.appendChild(inputTextNode);
     active_prompt.innerText = "";
+    resetShadow();
     //active_prompt.style.visibility = "hidden";
     document.body.insertBefore(inputDiv, active_prompt_container);
 
@@ -123,12 +124,16 @@ window.addEventListener("keydown", (e) => {
     }
 });
 
+function resetShadow() {
+    shadow.innerHTML = active_prompt.innerText + "&nbsp;";
+};
+
 active_prompt_container.addEventListener("click", (e) => {
     active_prompt.focus();
 });
 
 active_prompt.oninput = () => {
-    shadow.innerHTML = active_prompt.innerText + "&nbsp;";
+    resetShadow();
 }
 
 document.onselectionchange = () => {
