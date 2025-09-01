@@ -22,7 +22,7 @@ export const get = function(params) {
     const inputs = params.args;
 
     if(inputs.length > 1 && inputs[1] !== undefined) {
-        return vars[inputs[1]];
+        return vars[inputs[1]] || NULL;
     }
 
     return NULL;

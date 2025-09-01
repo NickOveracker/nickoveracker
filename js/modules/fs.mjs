@@ -1,24 +1,62 @@
 import { stdout } from "./stdout.mjs";
+import { files } from "./file_list.mjs";
 
 export const DIRECTORY  = { className: "file file-d", },
              TEXT       = { className: "file file-f", },
              EXECUTABLE = { className: "file file-e", };
 
-export const fs = [ 
-    {
+const hash = {
+    "~": {
         name: "~",
+        path: "~",
         type: DIRECTORY,
-        contents: [
-            { type: TEXT, name: "cv.md" },
-            { type: EXECUTABLE, name: "stixu", execute: openStixu },
-            { type: EXECUTABLE, name: "ainu-latinizer", execute: openLatinizer },
-        ],
+        contents: [],
     },
-];
+};
 
-export const getFile = function(path) {
-    // TODO: Don't use pwd.
-    return pwd.contents.find(file => file.name === path);
+export const fs = (() => {
+    files.forEach(file => {
+        const hierarchy = file.split("/");
+        let parentObj = hash["~"];
+        let parentPath = parentObj.name;
+
+        hierarchy.forEach((name, depth) => {
+            const thisPath = `${parentPath}/${name}`;
+            let thisFileObj = hash[thisPath];
+
+            if(!thisFileObj) {
+                thisFileObj = { name: name, path: thisPath, parentD: parentObj };
+                hash[thisPath] = thisFileObj
+                parentObj.contents.push(thisFileObj);
+
+                if(depth < hierarchy.length - 1) { // TODO: Handle empty directories.
+                    thisFileObj.type = DIRECTORY;
+                    thisFileObj.contents = [];
+                } else if(name.endsWith(".nsh")) {
+                    thisFileObj.type = EXECUTABLE;
+                } else {
+                    thisFileObj.type = TEXT; // TODO: Obviously these aren't all text.
+                }
+            }
+
+            parentObj = thisFileObj;
+            parentPath = thisPath;
+        });
+    });
+
+    return [ hash["~"], ];
+})();
+
+export const getFile = function(path, ctx) {
+    if(path.startsWith("../")) {
+        const newCtx = !!ctx.parentD ? ctx.parentD : ctx;
+        return getFile(path.substring(3), ctx.parentD);
+    } else if(path.startsWith("./")) {
+        return getFile(path.substring(2), ctx);
+    } else if(path.startsWith("/")) {
+        return getFile(`~${path}`, hash["~"]);
+    }
+    return hash[ path.startsWith("~") ? path : `${ctx.path}/${path}`];
 };
 
 /**************
@@ -69,14 +107,3 @@ export const cmd_dir = {
  * ALL CMDS EXPORT
  ******************/
 export const fs_cmds = [ cmd_pwd, cmd_ls, cmd_dir, ];
-
-/**********************
- * EXECUTABLES (LINKS)
- **********************/
-function openStixu(_params) {
-    window.open("https://stixu.io", "_blank").focus();
-}
-
-function openLatinizer(_params) {
-    window.open("https://huggingface.co/spaces/TwentyNine/byt5-ain-kana-latin-converter").focus();
-}

@@ -1,18 +1,17 @@
-import { EXECUTABLE, DIRECTORY, getFile } from "./fs.mjs";
+import { EXECUTABLE, DIRECTORY, getFile, pwd } from "./fs.mjs";
 import { stdout } from "./stdout.mjs";
 
 function cat(params) {
-    const file   = getFile(params.args[1]);
+    const file   = getFile(params.args[1], pwd);
     let   result = "";
 
     if(!!file) {
-        if(file.type === EXECUTABLE) {
-            result = `${params.args[0]}: ${params.args[1]}: Executable file.`;
-        } else if(file.type === DIRECTORY) {
-            result = `${params.args[0]}: ${params.args[1]}: Directory.`;
+        if(file.type === DIRECTORY) {
+            result = `${params.args[0]}: ${params.args[1]}: Is a directory`;
         } else {
             const xmlhttp = new XMLHttpRequest();
-            xmlhttp.open("GET", `./files/${params.args[1]}`, false);
+            xmlhttp.open("GET", `./files/${file.path.substring(2)}`, false);
+            xmlhttp.overrideMimeType("text/plain"); // Suppress XML parsing errors.
             xmlhttp.send();
             result = xmlhttp.status==200 ? xmlhttp.responseText : `ERROR: Internet's broken :(`;
         }

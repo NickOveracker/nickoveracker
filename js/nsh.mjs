@@ -2,8 +2,9 @@ import { fs_cmds, fs, pwd, EXECUTABLE } from "./modules/fs.mjs";
 import { clear_cmds }                   from "./modules/clear.mjs";
 import { vars_cmds  }                   from "./modules/user_vars.mjs";
 import { math_cmds  }                   from "./modules/math.mjs";
-import { cat_cmds   }                   from "./modules/cat.mjs";
+import { cat_cmds, cmd_cat as cat }     from "./modules/cat.mjs";
 import { help_cmds  }                   from "./modules/help.mjs";
+import { nav_cmds }                     from "./modules/nav.mjs";
 import { println }                      from "./modules/stdout.mjs";
 //import { cmd_latn }                     from "./modules/nlp.mjs";
 
@@ -14,9 +15,32 @@ export const commands = [
     ...fs_cmds,
     ...vars_cmds,
     ...math_cmds,
+    ...nav_cmds,
     //cmd_latn,
 ];
 
+function resolveCommand(inputs, ctx) {
+    let executable = ctx.contents.find(cmd => {
+        return cmd.type === EXECUTABLE && cmd.name === inputs[0];
+    });
+
+    if(!!executable) {
+        let buffer = "";
+        cat.execute({
+            args: [ null, `${ctx.path}/${inputs[0]}`],
+            ostream: {
+                println: function(str) {
+                    buffer += str;
+                },
+            },
+        });
+
+        return resolveCommand(buffer.trim().split(/\s+/), ctx);
+    } else {
+        let builtinCmd = commands.find(cmd => cmd.name === inputs[0]);
+        return !!builtinCmd ? { execute: builtinCmd.execute, args: inputs } : null;
+    }
+}
 
 function execute() {
     const inputDiv  = document.createElement("div");
@@ -31,10 +55,10 @@ function execute() {
     const inputTokens = inputText.trim().split(/\s+/);
     if(inputTokens.length > 0) {
         // TODO: This needs to be in its own function. Need to evaluate expressions right to left.
-        let cmd = commands.find(cmd => cmd.name === inputTokens[0]);
-        cmd ??= pwd.contents.find(cmd => cmd.type === EXECUTABLE && cmd.name === inputTokens[0]);
+        const cmd = resolveCommand(inputTokens, pwd);
+
         if(!!cmd) {
-            cmd.execute({args: inputTokens});
+            cmd.execute({args: cmd.args});
         } else {
             println(`command not found: ${inputTokens[0]}`, false);
         }
