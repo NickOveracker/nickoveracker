@@ -5,20 +5,23 @@ export const DIRECTORY  = { className: "file file-d", },
              TEXT       = { className: "file file-f", },
              EXECUTABLE = { className: "file file-e", };
 
+const home = {
+    name: "~",
+    path: "~",
+    type: DIRECTORY,
+    contents: [],
+}; 
+
+home.parentD = home;
+
 const hash = {
-    "~": {
-        name: "~",
-        path: "~",
-        type: DIRECTORY,
-        contents: [],
-    },
+    "~": home,
 };
-hash["~"].parentD = hash["~"];
 
 export const fs = (() => {
     files.forEach(file => {
         const hierarchy = file.split("/");
-        let parentObj = hash["~"];
+        let parentObj = home;
         let parentPath = parentObj.name;
 
         hierarchy.forEach((name, depth) => {
@@ -45,7 +48,7 @@ export const fs = (() => {
         });
     });
 
-    return [ hash["~"], ];
+    return [ home, ];
 })();
 
 export const getFile = function (path, ctx) {
@@ -64,7 +67,7 @@ export const getFile = function (path, ctx) {
     } else if (path.startsWith("./")) {
         return getFile(path.substring(2), ctx);
     } else if (path.startsWith("/")) {
-        return getFile(`~${path}`, hash["~"]);
+        return getFile(`~${path}`, home);
     } else if (path === "..") {
         return ctx.parentD;
     } else if (path === ".") {
@@ -100,7 +103,6 @@ function ls(params) {
         target.contents.forEach(file => {
             output += stylize(file);
         });
-
     } else {
         output = stylize(target);
     }
@@ -126,7 +128,27 @@ export const cmd_dir = {
     showHelp: false,
 };
 
+/*************
+ * CD COMMAND
+ *************/
+function cd (params) {
+    const target = params.args.length > 1 ? getFile(params.args[1], pwd) : home;
+
+    if (target.type === DIRECTORY) {
+        pwd = target;
+    } else {
+        params.ostream.println(`${params[0]}: no such file or directory: ${target}`);
+    }
+}
+
+export const cmd_cd = {
+    name: "cd",
+    execute: cd,
+    help: "Change directory",
+    showHelp: true,
+}
+
 /******************
  * ALL CMDS EXPORT
  ******************/
-export const fs_cmds = [ cmd_pwd, cmd_ls, cmd_dir, ];
+export const fs_cmds = [ cmd_pwd, cmd_ls, cmd_dir, cmd_cd ];
