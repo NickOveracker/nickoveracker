@@ -134,10 +134,12 @@ export const cmd_dir = {
 function cd (params) {
     const target = params.args.length > 1 ? getFile(params.args[1], pwd) : home;
 
-    if (target.type === DIRECTORY) {
+    if (!target) {
+        params.ostream.println(`${params.args[0]}: no such file or directory: ${params.args[1]}`);
+    } else if(target.type === DIRECTORY) {
         pwd = target;
     } else {
-        params.ostream.println(`${params[0]}: no such file or directory: ${target}`);
+        params.ostream.println(`${params.args[0]}: not a directory: ${params.args[1]}`);
     }
 }
 
